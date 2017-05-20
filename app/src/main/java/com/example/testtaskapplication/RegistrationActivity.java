@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
@@ -18,19 +20,34 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
     }
 
+    protected boolean validate(EditText editText) {
+        String text = editText.getText().toString();
+        String errorMessage = "";
+        if (text.isEmpty()) {errorMessage = getResources().getString(R.string.empty_mail);} else
+            if ((!text.contains("@")) || (text.indexOf("@", (text.indexOf("@"))+1)>0) ||
+               (text.indexOf("@")==1) || (text.indexOf("@")==text.length()) || (text.indexOf(".")==1) ||
+               (text.indexOf(".")==text.length()) || (text.indexOf(".", text.indexOf("@"))==-1)) {
+                errorMessage = getResources().getString(R.string.mail_wrong_format);
+            }
+        if (!errorMessage.isEmpty()) {
+            editText.setError(errorMessage);
+        }
+        return errorMessage.isEmpty();
+    }
+
     public void registerUser(View view) {
-        EditText editText = (EditText) findViewById(R.id.regEmailEditText);
-        String email = editText.getText().toString();
-        editText = (EditText) findViewById(R.id.regPassEditText1);
+        EditText editText = (EditText) findViewById(R.id.regPassEditText1);
         String pass1 = editText.getText().toString();
         editText = (EditText) findViewById(R.id.regPassEditText2);
         String pass2 = editText.getText().toString();
+        editText = (EditText) findViewById(R.id.regEmailEditText);
+        String email = editText.getText().toString();
         String errorMessage = "";
         Context context = getApplicationContext();
         SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String savedPass = sharedPref.getString(email, "");
-        if (email.length()<6) {
-            errorMessage = getResources().getString(R.string.email_length_error);
+        if (!validate(editText)) {
+            errorMessage = getResources().getString(R.string.mail_wrong_format);
         } else
         if (!(pass1.equals(pass2))) {
             errorMessage = getResources().getString(R.string.password_equality_error);
