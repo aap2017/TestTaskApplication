@@ -61,8 +61,7 @@ public class RegistrationActivity extends AppCompatActivity {
             editor.putString(email, pass1);
             editor.commit();
             //exit to main screen
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            finish();
         }
     }
 }
