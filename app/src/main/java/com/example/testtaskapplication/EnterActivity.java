@@ -1,6 +1,8 @@
 package com.example.testtaskapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +22,12 @@ public class EnterActivity extends AppCompatActivity {
     }
 
     public void exit(View view){
+        Context context = getApplicationContext();
+        SharedPreferences sessionSharedPref = context.getSharedPreferences(getString(R.string.save_session_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor sessionEditor = sessionSharedPref.edit();
+        sessionEditor.remove("session");
+        sessionEditor.commit();
+
         finish();
     }
 }

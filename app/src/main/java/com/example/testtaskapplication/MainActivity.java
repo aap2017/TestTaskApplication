@@ -18,6 +18,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Context context = getApplicationContext();
+        SharedPreferences sessionSharedPref = context.getSharedPreferences(getString(R.string.save_session_file_key), Context.MODE_PRIVATE);
+        String savedSession = sessionSharedPref.getString("session", "");
+        if (savedSession.length()!=0) {
+            Intent intent = new Intent(this, EnterActivity.class);
+            intent.putExtra(EXTRA_MESSAGE, savedSession);
+            startActivity(intent);
+        }
+    }
+
     public void registration(View view){
         Intent intent = new Intent(this, RegistrationActivity.class);
         startActivity(intent);
@@ -44,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
             alert.show();
 
         } else {
+            Context context = getApplicationContext();
+            SharedPreferences sessionSharedPref = context.getSharedPreferences(getString(R.string.save_session_file_key), Context.MODE_PRIVATE);
+            SharedPreferences.Editor sessionEditor = sessionSharedPref.edit();
+            sessionEditor.putString("session", email);
+            sessionEditor.commit();
+
             Intent intent = new Intent(this, EnterActivity.class);
             intent.putExtra(EXTRA_MESSAGE, email);
             startActivity(intent);
